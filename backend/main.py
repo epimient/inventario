@@ -13,9 +13,12 @@ app.add_middleware(
     allow_headers=["*"],  # Permite todos los encabezados
 )
 
+import os
+from fastapi.staticfiles import StaticFiles
+
 # 2. Incluir las rutas de la API
 app.include_router(api_router, prefix="/api")
 
-@app.get("/")
-def read_root():
-    return {"message": "El backend de Smart Inventory está funcionando correctamente"}
+# Montar el frontend para servir archivos estáticos (index.html, css/, js/)
+frontend_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
+app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
